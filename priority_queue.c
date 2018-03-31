@@ -10,7 +10,7 @@ typedef struct  data {
 }               t_data;
 
 typedef struct  node {
-    t_data      data;
+    t_data      *data;
     int         priority;
     struct node *next;
 }               t_node;
@@ -19,14 +19,6 @@ typedef struct  p_queue {
     t_node      *max_p;
     t_node      *min_p;
 }               t_queue;
-
-t_data  init_data(int val)
-{
-    t_data  dat;
-
-    dat.value = val;
-    return (dat);
-}
 
 t_queue	*init(void)
 {
@@ -38,7 +30,7 @@ t_queue	*init(void)
 	return (new);
 }
 
-t_node  *init_node(t_data data, int priority)
+t_node  *init_node(t_data *data, int priority)
 {
     t_node  *new;
 
@@ -49,7 +41,7 @@ t_node  *init_node(t_data data, int priority)
     return (new);
 }
 
-void			enqueue(t_queue *queue, t_data num, int priority)
+void			enqueue(t_queue *queue, t_data *num, int priority)
 {
 	t_node	*new;
     t_node  *tmp;
@@ -85,13 +77,13 @@ void			enqueue(t_queue *queue, t_data num, int priority)
 	}
 }
 
-t_data			dequeue(t_queue *queue)
+t_data			*dequeue(t_queue *queue)
 {
 	t_node	*tmp;
-	t_data			tmp_num;
+	t_data			*tmp_num;
 
 	if (!queue->max_p)
-		return (init_data(0));
+		return (NULL);
 	tmp = queue->max_p;
 	tmp_num = queue->max_p->data;
 	queue->max_p = queue->max_p->next;
@@ -102,10 +94,10 @@ t_data			dequeue(t_queue *queue)
 	return (tmp_num);
 }
 
-t_data			peek(t_queue *queue)
+t_data			*peek(t_queue *queue)
 {
 	if (!queue->max_p)
-		return (init_data(0));
+		return (NULL);
 	return (queue->max_p->data);
 }
 
@@ -116,17 +108,17 @@ int				isEmpty(t_queue *queue)
 
 int main(void)
 {
-    t_data dat[8];
-    /*
-    dat[0] = init_data(4);
-    dat[1] = init_data(3);
-    dat[2] = init_data(6);
-    dat[3] = init_data(5);
-    dat[4] = init_data(0);
-    dat[5] = init_data(7);
-    dat[6] = init_data(2);
-    dat[7] = init_data(1);
-*/
+    t_data dat[8] = {
+        {0},
+        {3},
+        {4},
+        {5},
+        {6},
+        {7},
+        {2},
+        {1},
+    };
+/*
     dat[0] = init_data(0);
     dat[3] = init_data(1);
     dat[4] = init_data(2);
@@ -135,15 +127,15 @@ int main(void)
     dat[7] = init_data(5);
     dat[2] = init_data(6);
     dat[1] = init_data(7);
-
+*/
     t_queue *q;
     q = init();
     for (size_t i = 0; i < 8; i++) {
-        enqueue(q, dat[i], i);
+        enqueue(q, &dat[i], i);
     }
     while(!isEmpty(q)){
-        t_data tmp = dequeue(q);
-        printf("Value: %d\n", tmp.value);
+        t_data *tmp = dequeue(q);
+        printf("Value: %d\n", tmp->value);
     }
     return 0;
 }
