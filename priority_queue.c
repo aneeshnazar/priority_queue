@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 
-#define HIPRIORITY(a, b) (a < b)
-#define LOPRIORITY(a, b) (a > b)
+//#define HIPRIORITY(a, b) (a < b)
+//#define LOPRIORITY(a, b) (a > b)
+#define PRIORITY(a, b) (a > b)
 
 typedef struct  data {
     int value;
@@ -61,12 +61,14 @@ void			enqueue(t_queue *queue, t_data num, int priority)
 		queue->min_p = new;
 	else
 	{
-        if (LOPRIORITY(queue->min_p->priority, priority))
+        //if (LOPRIORITY(queue->min_p->priority, priority))
+        if (!PRIORITY(queue->min_p->priority, priority))
         {
             queue->min_p->next = new;
     		queue->min_p = queue->min_p->next;
         }
-        else if (HIPRIORITY(queue->max_p->priority, priority))
+        else if (PRIORITY(queue->max_p->priority, priority))
+        // else if (HIPRIORITY(queue->max_p->priority, priority))
         {
             new->next = queue->max_p;
     		queue->max_p = new;
@@ -74,10 +76,9 @@ void			enqueue(t_queue *queue, t_data num, int priority)
         else
         {
             tmp = queue->max_p;
-            while (tmp && LOPRIORITY(tmp->priority, priority))
-            {
+            while (tmp && !PRIORITY(tmp->priority, priority))
+            // while (tmp && LOPRIORITY(tmp->priority, priority))
                 tmp = tmp->next;
-            }
             new->next = tmp;
             tmp->next = new;
         }
@@ -116,15 +117,24 @@ int				isEmpty(t_queue *queue)
 int main(void)
 {
     t_data dat[8];
-
-    dat[0] = init_data(8);
+    /*
+    dat[0] = init_data(4);
     dat[1] = init_data(3);
     dat[2] = init_data(6);
     dat[3] = init_data(5);
-    dat[4] = init_data(9);
+    dat[4] = init_data(0);
     dat[5] = init_data(7);
     dat[6] = init_data(2);
     dat[7] = init_data(1);
+*/
+    dat[0] = init_data(0);
+    dat[3] = init_data(1);
+    dat[4] = init_data(2);
+    dat[5] = init_data(3);
+    dat[6] = init_data(4);
+    dat[7] = init_data(5);
+    dat[2] = init_data(6);
+    dat[1] = init_data(7);
 
     t_queue *q;
     q = init();
